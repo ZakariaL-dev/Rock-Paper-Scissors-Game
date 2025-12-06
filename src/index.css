@@ -1,0 +1,13 @@
+@import "tailwindcss";
+
+body {
+  background-color: #a1e8eb;
+}
+
+.GameCard {
+  @apply bg-[#1a696c] rounded-xl lg:w-36 lg:h-36 w-28 h-28 flex flex-col items-center justify-center gap-3 transition-all ease-in-out cursor-pointer hover:bg-teal-500 hover:scale-110 hover:border-2;
+}
+
+.CompCard {
+  @apply bg-[#6dd2d5] w-full py-6 text-center rounded-xl shadow-lg font-bold text-cyan-50;
+}
