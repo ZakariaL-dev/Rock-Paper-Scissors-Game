@@ -8,15 +8,47 @@ import { ResultContext } from "../Context/GameContext";
 import { useContext, useEffect, useState } from "react";
 // tile
 import moment from "moment";
+moment.defineLocale("en-gb", {
+  months:
+    "January_February_March_April_May_June_July_August_September_October_November_December".split(
+      "_"
+    ),
+  monthsShort: "Jan_Feb_Mar_Apr_May_Jun_Jul_Aug_Sep_Oct_Nov_Dec".split("_"),
+  weekdays: "Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday".split(
+    "_"
+  ),
+  weekdaysShort: "Sun_Mon_Tue_Wed_Thu_Fri_Sat".split("_"),
+  weekdaysMin: "Su_Mo_Tu_We_Th_Fr_Sa".split("_"),
+  longDateFormat: {
+    LT: "HH:mm",
+    LTS: "HH:mm:ss", // <--- This is the key format!
+    L: "DD/MM/YYYY",
+    LL: "D MMMM YYYY",
+    LLL: "D MMMM YYYY HH:mm",
+    LLLL: "dddd, D MMMM YYYY HH:mm",
+  },
+  // ... You can omit the rest (calendar, relativeTime, etc.) for brevity,
+  // or include them if you use those features. The 'LTS' is the main fix.
+});
+
+// ➡️ Now set the locale globally
+moment.locale("en-gb");
 
 const DashBoard = () => {
   const { Results } = useContext(ResultContext);
   const [AllGames, setAllGames] = useState([]);
+  console.log(moment.localeData().longDateFormat("LTS"));
   useEffect(() => {
     if (Results && Results.Score) {
-      setAllGames((prevGames) => [...prevGames, Results]);
+      // 1. Store the Results along with the current timestamp
+      const gameResultWithTime = {
+        ...Results,
+        timestamp: moment().toISOString(),
+      };
+      setAllGames((prevGames) => [...prevGames, gameResultWithTime]);
     }
   }, [Results]);
+
   //
   function DisplayPlayerRslt(g) {
     if (g.Player === "rock") {
@@ -72,7 +104,7 @@ const DashBoard = () => {
           {DisplayComputerRslt(g)}
         </div>
         {DisplayMessageRslt(g)}
-        <div>{moment().format("LTS")}</div>
+        <div>{moment(g.timestamp).format("LTS")}</div>
       </div>
     );
   });
